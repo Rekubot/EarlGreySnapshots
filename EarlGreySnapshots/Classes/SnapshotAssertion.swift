@@ -1,6 +1,6 @@
 import EarlGrey
 
-func grey_snapshot(testCaseName: String?, recordMode: Bool, deviceAgnostic: Bool) -> GREYAssertionBlock {
+func grey_snapshot(testCaseName: String?, recordMode: Bool, deviceAgnostic: Bool, tolerance: CGFloat = 0.0) -> GREYAssertionBlock {
     let testCase = testCaseName ?? CurrentTestObserver.shared.currentCase?.name ?? "-[UnknownTestCase unknownMethod]"
     let testInfo = TestNameParser().parse(testName: testCase)
     let bundleNameProvider = BundleNameProvider(bundle: Bundle.testBundle)
@@ -9,7 +9,8 @@ func grey_snapshot(testCaseName: String?, recordMode: Bool, deviceAgnostic: Bool
     return grey_snapshot(testName: testName,
                          snapshotName: testInfo.testMethodName,
                          recordMode: recordMode,
-                         deviceAgnostic: deviceAgnostic)
+                         deviceAgnostic: deviceAgnostic,
+                         tolerance: tolerance)
 }
 
 func grey_snapshot(testName: String,
@@ -17,7 +18,8 @@ func grey_snapshot(testName: String,
                    recordMode: Bool,
                    deviceAgnostic: Bool,
                    controllerFactory: SnapshotControllerCreating = SnapshotControllerFactory(),
-                   imagesDirectoryProvider: ImagesDirectoryProviding = ImagesDirectoryProvider())
+                   imagesDirectoryProvider: ImagesDirectoryProviding = ImagesDirectoryProvider(),
+                   tolerance: CGFloat = 0.0)
     -> GREYAssertionBlock {
     return GREYAssertionBlock(name: "snapshot") { element, errorOrNil -> Bool in
         guard let view = element as? UIView else {
@@ -31,7 +33,7 @@ func grey_snapshot(testName: String,
         let testController = controllerFactory.makeSnapshotController(withInfo: snapshotInfo)
 
         do {
-            try testController.compare(viewOrLayer: view, selector: snapshotName, identifier: nil, tolerance: 0.0)
+            try testController.compare(viewOrLayer: view, selector: snapshotName, identifier: nil, tolerance: tolerance)
         } catch let error as NSError {
             errorOrNil?.pointee = error
         }

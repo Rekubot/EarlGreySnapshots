@@ -12,6 +12,6 @@ public func grey_verifySnapshot(_ name: String? = nil) -> GREYAssertionBlock {
     return grey_snapshot(testCaseName: name, recordMode: false, deviceAgnostic: false)
 }
 
-public func grey_verifyDeviceAgnosticSnapshot(_ name: String? = nil) -> GREYAssertionBlock {
-    return grey_snapshot(testCaseName: name, recordMode: false, deviceAgnostic: true)
+public func grey_verifyDeviceAgnosticSnapshot(_ name: String? = nil, tolerance: CGFloat = 0.0) -> GREYAssertionBlock {
+    return grey_snapshot(testCaseName: name, recordMode: false, deviceAgnostic: true, tolerance: tolerance)
 }
